@@ -1,0 +1,5 @@
+# Versión de kubectl que se instalará en la bastión
+kubectl_version: v1.29.0
+
+# Versión de helm que se descargará e instalará
+helm_version: v3.13.2

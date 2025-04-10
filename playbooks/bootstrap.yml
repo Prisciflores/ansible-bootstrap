@@ -1,0 +1,46 @@
+---
+- name: Bootstrap bastion with DevOps tools
+  hosts: bastion
+  become: yes
+
+  vars_files:
+    - ../group_vars/all.yml  # <-- Ruta al archivo de variables externas
+
+  tasks:
+    # Mostramos el valor de la variable para confirmar que Ansible la reconoce
+    - name: Mostrar versión de kubectl desde variable
+      debug:
+        msg: "La versión es {{ kubectl_version }}"
+
+    - name: Ensure updates are installed
+      yum:
+        name: "*"
+        state: latest
+
+    - name: Install basic packages
+      yum:
+        name:
+          - git #contrl de versiones
+          - unzip #descomprimir
+          - htop
+        state: present
+
+    - name: Install kubectl
+      get_url:
+        url: "https://dl.k8s.io/release/{{ kubectl_version }}/bin/linux/amd64/kubectl"
+        dest: /usr/local/bin/kubectl
+        mode: '0755'
+      # Descarga e instala kubectl directamente desde el sitio oficial
+
+    - name: Install helm
+      unarchive:
+        src: "https://get.helm.sh/helm-{{ helm_version }}-linux-amd64.tar.gz"
+        dest: /tmp
+        remote_src: yes
+      # Descarga y descomprime helm desde Helm.sh
+
+    - name: Move helm binary
+      command: mv /tmp/linux-amd64/helm /usr/local/bin/helm
+      args:
+        creates: /usr/local/bin/helm
+      # Mueve el ejecutable a una ruta del sistema si no existe previamente
