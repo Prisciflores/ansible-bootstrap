@@ -60,7 +60,7 @@ ansible-playbook playbooks/bootstrap.yml
    cd ansible-bootstrap
 
    ```
-   2. Configura tu archivo inventory/hosts con:
+2. Configura tu archivo inventory/hosts con:
 
 ```bash
 
